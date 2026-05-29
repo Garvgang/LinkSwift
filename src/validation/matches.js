@@ -23,8 +23,8 @@ export const createMatchSchema = z
     sport: z.string().min(1, 'Sport must be a non-empty string'),
     homeTeam: z.string().min(1, 'Home team must be a non-empty string'),
     awayTeam: z.string().min(1, 'Away team must be a non-empty string'),
-    startTime: z.string().datetime('Invalid ISO date format for startTime'),
-    endTime: z.string().datetime('Invalid ISO date format for endTime'),
+    startTime: z.iso.datetime('Invalid ISO date format for startTime'),
+    endTime: z.iso.datetime('Invalid ISO date format for endTime'),
     homeScore: z.coerce.number().int().nonnegative().optional(),
     awayScore: z.coerce.number().int().nonnegative().optional(),
   })

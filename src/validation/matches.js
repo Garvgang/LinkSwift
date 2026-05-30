@@ -29,7 +29,7 @@ export const createMatchSchema = z
     awayScore: z.coerce.number().int().nonnegative().optional(),
   })
   .refine((data) => new Date(data.endTime) > new Date(data.startTime), {
-  message: 'End time must be chronologically after start time',
+  message: 'End time must be after start time',
   path: ['endTime'],
 })
 

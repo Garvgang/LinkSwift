@@ -44,7 +44,7 @@ const App: React.FC = () => {
         
         {/* Header Section */}
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-brand-yellow border-2 border-black rounded-2xl p-6 shadow-hard">
-              <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4">
             <img
               src={logo}
               alt="LinkSwift Logo"
@@ -61,6 +61,16 @@ const App: React.FC = () => {
               </p>
             </div>
           </div>
+          <div className="flex flex-col items-end gap-2">
+            <StatusIndicator status={status} />
+
+            {wsError && (
+              <span className="text-xs font-mono bg-red-100 text-red-700 border border-red-200 px-2 py-1 rounded">
+                WS: {wsError}
+              </span>
+            )}
+          </div>
+
         </header>
 
         {/* Content Grid */}

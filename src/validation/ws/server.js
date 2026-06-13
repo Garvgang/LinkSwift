@@ -1,5 +1,8 @@
 import { WebSocket, WebSocketServer} from 'ws'
 import { RateLimiterMemory } from "rate-limiter-flexible";
+import { db } from "../../db/db.js";
+import { matches } from "../../db/schema.js";
+import { eq } from "drizzle-orm";
 
 const matchSubscribers=new Map();
 
@@ -47,7 +50,7 @@ function broadcastToAll(wss,payload){
     }
 }
 
-function handleMessage(socket, data){
+async function handleMessage(socket, data){
     let message;
 
     try{
@@ -61,9 +64,37 @@ function handleMessage(socket, data){
         return;
     }
 
+    if(message?.type !== "subscribe" && message?.type !== "unsubscribe"){
+        sendJson(socket,{
+            type:"error",
+            details:"Unknown message type"
+        });
+        return;
+    }
     const matchId = Number(message.matchId);
 
+    if (!Number.isInteger(matchId)) {
+        sendJson(socket, {
+            type: "error",
+            details: "Invalid matchId"
+        });
+        return;
+    }
+
     if(message?.type === 'subscribe' && Number.isInteger(matchId)){
+        const [match] = await db
+            .select()
+            .from(matches)
+            .where(eq(matches.id, matchId))
+            .limit(1);
+        
+        if(!match){
+            sendJson(socket,{
+                type:"error",
+                details:`Match ${matchId} does not exist`
+            });
+            return;
+        }
         subscribe(matchId, socket);
 
         socket.subscriptions.add(matchId);
@@ -119,8 +150,8 @@ export function attachWebSocketServer(server){
             type:'Welcome!'
         });
 
-        socket.on('message',(data)=>{
-            handleMessage(socket,data);
+        socket.on('message',async (data)=>{
+            await handleMessage(socket,data);
         })
 
         socket.on('error',()=>{
@@ -156,7 +187,7 @@ export function attachWebSocketServer(server){
     }
 
     function broadcastCommentary(matchId,comment){
-        broadcastToMatch(matchId,{type:'commentary',details:comment});
+        broadcastToMatch(matchId,{type:'commentary',data:comment});
     }
 
     return {

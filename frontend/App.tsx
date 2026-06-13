@@ -43,19 +43,22 @@ const App: React.FC = () => {
         
         {/* Header Section */}
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-brand-yellow border-2 border-black rounded-2xl p-6 shadow-hard">
-          <div>
-            <h1 className="text-3xl font-black tracking-tight text-brand-dark mb-1">
-              Spotrz
-            </h1>
-            <p className="text-sm font-medium opacity-80">Real-time match data demo</p>
-          </div>
-          <div className="flex flex-col items-end gap-2">
-            <StatusIndicator status={status} />
-            {wsError && (
-              <span className="text-xs font-mono bg-red-100 text-red-700 border border-red-200 px-2 py-1 rounded">
-                WS: {wsError}
-              </span>
-            )}
+              <div className="flex items-center gap-4">
+            <img
+              src="./assests/logo.png"
+              alt="LinkSwift Logo"
+              className="w-20 h-20 object-contain"
+            />
+
+            <div>
+              <h1 className="text-3xl font-black tracking-tight text-brand-dark mb-1">
+                LinkSwift
+              </h1>
+
+              <p className="text-sm font-medium opacity-80">
+                Real-time sports data. Live scores. Instant updates.
+              </p>
+            </div>
           </div>
         </header>
 

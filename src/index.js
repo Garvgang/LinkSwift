@@ -1,6 +1,7 @@
 import express from 'express';
 import helmet from "helmet";
 import http from 'http';
+import cors from "cors";
 
 import matchRouter from "./routes/matches.js";
 import { attachWebSocketServer} from './validation/ws/server.js';
@@ -12,6 +13,12 @@ const HOST =process.env.HOST || '0.0.0.0';
 
 const app = express();
 const server=http.createServer(app);
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.set('trust proxy', true);
 
 // JSON middleware

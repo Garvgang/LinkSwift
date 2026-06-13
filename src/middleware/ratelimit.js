@@ -24,12 +24,12 @@ export async function rateLimitMiddleware(req,res,next){
     try{
         await httpLimiter.consume(req.ip);
 
-        console.log("Allowed:", req.ip);
+        // console.log("Allowed:", req.ip);
 
         next();
     }
     catch{
-        console.log("Blocked:", req.ip);
+        // console.log("Blocked:", req.ip);
 
         res.status(429).json({
             error:"Too many requests"

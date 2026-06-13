@@ -15,7 +15,9 @@ const app = express();
 const server=http.createServer(app);
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin:["http://localhost:3000",
+    "https://link-swift-drab.vercel.app"
+    ],
     credentials: true,
   })
 );

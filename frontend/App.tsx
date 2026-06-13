@@ -4,6 +4,7 @@ import { MatchCard } from './components/MatchCard';
 import { LiveFeed } from './components/LiveFeed';
 import { StatusIndicator } from './components/StatusIndicator';
 import { API_BASE_URL, WS_BASE_URL } from './constants';
+import logo from './assets/logo.png';
 
 const App: React.FC = () => {
   const pageSize = 6;
@@ -45,7 +46,7 @@ const App: React.FC = () => {
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-brand-yellow border-2 border-black rounded-2xl p-6 shadow-hard">
               <div className="flex items-center gap-4">
             <img
-              src="./assests/logo.png"
+              src={logo}
               alt="LinkSwift Logo"
               className="w-20 h-20 object-contain"
             />

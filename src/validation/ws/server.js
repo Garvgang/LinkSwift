@@ -36,6 +36,7 @@ const wsLimiter = new RateLimiterMemory({
     points: 5,
     duration: 2
 });
+
 function sendJson(socket,payload){
     if(socket.readyState!==WebSocket.OPEN) return;
     
@@ -71,6 +72,7 @@ async function handleMessage(socket, data){
         });
         return;
     }
+    
     const matchId = Number(message.matchId);
 
     if (!Number.isInteger(matchId)) {
@@ -120,14 +122,18 @@ async function handleMessage(socket, data){
         return;
     }
 }
+// This function creates the webSocket server
 export function attachWebSocketServer(server){
     const wss=new WebSocketServer({
-        server,
-        path:'/ws',
+        server,                          //Reuses your existing HTTP server.
+        path:'/ws',                      //Accepts WebSocket connections at the /ws path.
         maxPayload:1024*1024,
     })
+    // Connection handlers and broadcast functions...
     wss.on('connection', async (socket, req) => {
+        
         const ip = req.headers['x-forwarded-for']?.split(',')[0] ||  req.socket.remoteAddress;
+        
         try{
             await wsLimiter.consume(ip);
         }
@@ -138,13 +144,16 @@ export function attachWebSocketServer(server){
             );
             return;
         }
+        
         socket.isAlive = true;
 
         socket.on('pong',()=>{
             socket.isAlive = true;
         });
 
-        socket.subscriptions=new Set();
+        // subscriptions tracks the match IDs that this particular socket has subscribed to.
+        // new Set() avoids duplicate match IDs in a client's subscription list.
+        socket.subscriptions=new Set(); 
         
         sendJson(socket,{
             type:'Welcome!'

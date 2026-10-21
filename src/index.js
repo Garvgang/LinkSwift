@@ -38,7 +38,15 @@ app.get('/', (req, res) => {
 app.use('/matches',matchRouter);
 app.use('/matches/:id/commentary',commentaryRouter);
 
-const {broadcastMatchCreated,broadcastCommentary }=attachWebSocketServer(server);
+// This is where webSockets is attached to the server
+// The server object is passed into attachWebSocketServer(). 
+// That function creates the WebSocket server and returns two functions that the REST routes can use to broadcast events.
+const {
+  broadcastMatchCreated ,
+  broadcastCommentary 
+} = attachWebSocketServer(server);
+
+// app.locals stores these functions so your route handlers can access them later through res.app.locals.
 app.locals.broadcastMatchCreated = broadcastMatchCreated;
 app.locals.broadcastCommentary = broadcastCommentary;
 // Start the server
